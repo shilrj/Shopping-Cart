@@ -33,7 +33,9 @@ const useDataApi = (initialUrl, initialData) => {
         const result = await axios(url);
         console.log("FETCH FROM URl");
         if (!didCancel) {
-          dispatch({ type: "FETCH_SUCCESS", payload: result.data });
+          // result.data.data
+          // first data is from axios object, second data is from strapi object
+          dispatch({ type: "FETCH_SUCCESS", payload: result.data.data });
         }
       } catch (error) {
         if (!didCancel) {
@@ -165,8 +167,14 @@ const Products = (props) => {
     console.log(`total updated to ${newTotal}`);
     return newTotal;
   };
-  // TODO: implement the restockProducts function
-  const restockProducts = (url) => {};
+  const restockProducts = (url) => {
+    doFetch(url);
+    let newItems = data.map((item) => {
+      let { name, country, cost, instock } = item;
+      return { name, country, cost, instock };
+    });
+    setItems([...items, ...newItems]);
+  };
 
   return (
     <Container>
